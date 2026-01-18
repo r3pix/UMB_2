@@ -1,0 +1,6 @@
+TP,TN,FP,FN,Accuracy,Precision_pos,Recall_pos,F1_pos,AUC,model
+60,240,0,0,1.0,1.0,1.0,1.0,1.0,LogReg
+60,240,0,0,1.0,1.0,1.0,1.0,1.0,DecisionTree
+60,240,0,0,1.0,1.0,1.0,1.0,1.0,RandomForest
+60,240,0,0,1.0,1.0,1.0,1.0,1.0,SVM_RBF
+60,240,0,0,1.0,1.0,1.0,1.0,1.0,XGBoost
