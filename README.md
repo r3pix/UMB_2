@@ -214,60 +214,60 @@ def corr_heatmap(X, names, title, path):
 ### Wyniki (Zadanie 1) — wykresy + komentarze
 
 #### 1) Rozkłady gęstości (packets/s)
-![](images/images/z1_density_packets_per_sec.png)
+![](images/z1_density_packets_per_sec.png)
 
 **Komentarz:** Krzywe gęstości dla ruchu normalnego i ataku są praktycznie rozłączne — ataki mają znacząco wyższe `packets_per_sec`. To oznacza, że już pojedyncza cecha daje silny sygnał anomalii, a model może osiągać bardzo wysoką czułość bez ryzyka dużej liczby FP. W praktyce taka separacja odpowiada scenariuszowi „idealnemu”, gdzie atak jest wyraźnie inny statystycznie od normalnego ruchu.
 
 #### 2) Rozkłady gęstości (avg packet size)
-![](images/images/z1_density_avg_packet_size.png)
+![](images/z1_density_avg_packet_size.png)
 
 **Komentarz:** Dla ataków średni rozmiar pakietu jest przesunięty w stronę mniejszych wartości, co jest typowe dla masowych ataków generujących dużo krótkich pakietów. Rozkłady mają niewielkie nakładanie, więc cecha poprawia separację w przypadkach, gdy sama liczba pakietów mogłaby nie wystarczyć. Z perspektywy modelu liniowego oznacza to stabilny wkład w logit (po normalizacji Z-score).
 
 #### 3) Rozkłady gęstości (port entropy)
-![](images/images/z1_density_port_entropy.png)
+![](images/z1_density_port_entropy.png)
 
 **Komentarz:** Entropia portów dla ataku jest większa, co wskazuje na bardziej „chaotyczne” użycie portów docelowych (np. skanowanie lub rozproszone próby połączeń). Normalny ruch ma niższą entropię, bo zwykle korzysta z ograniczonego zestawu usług/portów. To dobra cecha dyskryminacyjna, bo opisuje różnorodność zachowania, a nie tylko „skalę” ruchu.
 
 #### 4) Rozkłady gęstości (SYN ratio)
-![](images/images/z1_density_syn_ratio.png)
+![](images/z1_density_syn_ratio.png)
 
 **Komentarz:** Ataki mają zdecydowanie wyższy `syn_ratio`, co jest zgodne z zachowaniem typu SYN flood (dużo prób inicjacji połączeń). W danych idealnych widać, że próg τ=0.5 nie powoduje wątpliwości decyzyjnej, bo klasy są dobrze rozdzielone. Cecha ta jest też interpretowalna operacyjnie: wysoki udział SYN jest bezpośrednio związany z anomalią na warstwie transportowej.
 
 #### 5) Współczynniki β regresji logistycznej
-![](images/images/z1_betas.png)
+![](images/z1_betas.png)
 
 **Komentarz:** Wykres pokazuje uporządkowane współczynniki β według |β| po normalizacji cech, więc ich porównywanie jest sensowne „wprost”. Największe |β| mają cechy najmocniej wpływające na decyzję — w tym eksperymencie są to głównie cechy intensywności i „losowości” ruchu. Znak β wskazuje kierunek: dodatni zwiększa prawdopodobieństwo ataku, a ujemny działa ochronnie (ruch bardziej „normalny”).
 
 #### 6) Macierz pomyłek (τ=0.5)
-![](images/images/z1_confusion.png)
+![](images/z1_confusion.png)
 
 **Komentarz:** Macierz jest idealna: TN=240, TP=60, FP=0, FN=0. Oznacza to, że w danych idealnych model nie myli klas ani razu — to efekt bardzo dużych przesunięć parametrów rozkładów dla ataku względem normalnego ruchu. Taki wynik jest dobry jako „punkt odniesienia” do Zadania 2, gdzie ataki subtelne będą się nakładać z normalnym ruchem.
 
 #### 7) Krzywa ROC + AUC
-![](images/images/z1_roc.png)
+![](images/z1_roc.png)
 
 **Komentarz:** AUC=1.0000, czyli praktycznie perfekcyjne rozróżnianie klas niezależnie od progu. Krzywa ROC blisko lewego-górnego rogu oznacza wysokie TPR przy bardzo niskim FPR. W praktyce pokazuje to, że model ma bardzo dobrą separację probabilistyczną, a nie tylko „trafienia” dla τ=0.5.
 
 #### 8) Histogram P(y=1|x) + próg τ
-![](images/images/z1_proba_hist.png)
+![](images/z1_proba_hist.png)
 
 **Komentarz:** Histogram pokazuje, że prawdopodobieństwa dla klasy normalnej skupiają się blisko 0, a dla ataku blisko 1, więc model jest bardzo pewny predykcji. W takim układzie zmiana progu τ nie wpłynie znacząco na FN/FP, bo w obszarze średnich wartości jest niewiele próbek. To spójne z idealną macierzą pomyłek oraz AUC bliskim 1.
 
 #### 9) Wkład cech β_i·x_i dla 3 próbek
-![](images/images/z1_contrib_0.png)
+![](images/z1_contrib_0.png)
 
 **Komentarz:** Ten wykres dekomponuje decyzję modelu dla jednej próbki: każda belka to wkład danej cechy do logitu (przed sigmoidem). Pozwala to wskazać, które cechy „wypchnęły” predykcję w stronę ataku, a które ją osłabiały. W danych idealnych zwykle kilka cech ma dominujący wkład, bo różnice rozkładów są duże.
 
-![](images/images/z1_contrib_1.png)
+![](images/z1_contrib_1.png)
 
 **Komentarz:** Jeśli dominują te same cechy co w wykresie β (globalnie), to znaczy że model jest konsekwentny: ważne cechy są ważne zarówno w uśrednieniu, jak i na pojedynczych przykładach. Gdyby próbka była „graniczna”, wkłady miałyby mniejsze wartości i częściej mieszałyby się znaki dodatnie/ujemne.
 
-![](images/images/z1_contrib_2.png)
+![](images/z1_contrib_2.png)
 
 **Komentarz:** Analiza wkładów pomaga też wykryć redundancję: jeśli dwie mocno skorelowane cechy dają podobny wkład, można rozważyć redukcję cech bez dużej utraty jakości. W praktyce jest to narzędzie interpretowalności, które ułatwia uzasadnienie działania modelu w kontekście bezpieczeństwa.
 
 #### 10) Korelacja Pearsona między cechami
-![](images/images/z1_corr.png)
+![](images/z1_corr.png)
 
 **Komentarz:** Mapa korelacji pokazuje, które cechy rosną/maleją wspólnie oraz czy istnieje silna redundancja (|ρ| blisko 1). W danych syntetycznych pewne zależności mogą wynikać z konstrukcji rozkładów (np. ataki jednocześnie zwiększają PPS i SYN ratio). Jeśli istnieją bardzo silne korelacje, model liniowy może „dzielić” wagę między cechy, przez co pojedyncze β może wydawać się mniejsze mimo istotności informacji.
 
@@ -376,45 +376,45 @@ if __name__ == "__main__":
 ### Wyniki (Zadanie 2) — wykresy + komentarze
 
 #### 1) 3 macierze pomyłek: std vs balanced vs τopt
-![](images/images/z2_confusions_3models.png)
+![](images/z2_confusions_3models.png)
 
 **Komentarz:** Dla modelu standardowego (τ=0.5) widać **FN=1**, czyli jeden przeoczony atak — mimo że FP=0 pozostaje 0. Model `balanced` usuwa FN (FN=0), ale płaci za to FP=3, czyli pojawiają się fałszywe alarmy. Strategia z τopt=0.12 usuwa FN (FN=0) przy mniejszym FP=2 niż `balanced`, co jest zgodne z optymalizacją kosztu (wysoka kara za FN).
 
 #### 2) ROC: standard vs balanced
-![](images/images/z2_roc_std_vs_balanced.png)
+![](images/z2_roc_std_vs_balanced.png)
 
 **Komentarz:** Oba modele mają bardzo wysokie AUC (std=0.9995, balanced=0.9993), więc ranking probabilistyczny jest znakomity — problemem jest głównie wybór progu i niezbalansowanie klas. Różnice między krzywymi wynikają z tego, że `class_weight` modyfikuje funkcję straty, przez co model zmienia położenie granicy decyzyjnej. W praktyce to potwierdza, że sama AUC nie wystarcza do oceny w systemach bezpieczeństwa — ważny jest też poziom FN/FP przy konkretnym τ.
 
 #### 3) Histogram P(y=1|x) dla modelu balanced
-![](images/images/z2_proba_hist_balanced.png)
+![](images/z2_proba_hist_balanced.png)
 
 **Komentarz:** W porównaniu do Zadania 1 widać większą „strefę niepewności” — część próbek normalnych dostaje wyższe prawdopodobieństwa, a część ataków (szczególnie subtelnych) może zbliżać się do progu. To tłumaczy, skąd biorą się FP w modelu balanced: model celowo „podnosi” prawdopodobieństwa, żeby nie gubić ataków. W kontekście bezpieczeństwa jest to akceptowalny kompromis, jeśli priorytetem jest brak FN.
 
 #### 4) Porównanie β: std vs balanced
-![](images/images/z2_betas_std_vs_balanced.png)
+![](images/z2_betas_std_vs_balanced.png)
 
 **Komentarz:** Wagi klas powodują, że model balanced „wzmacnia” wpływ cech, które pomagają wykrywać ataki, nawet jeśli jest ich mało. To widać jako zmianę wartości β (czasem również znaku), bo model musi przesunąć granicę decyzyjną w stronę klasy ataku. Taka zmiana jest typowa: balanced zwykle poprawia Recall kosztem Precision, co potwierdzają metryki (Recall=1.0, Precision≈0.833).
 
 #### 5) Nakładka rozkładów: normal vs obvious vs medium vs subtle
-![](images/images/z2_density_overlay_packets_per_sec.png)
+![](images/z2_density_overlay_packets_per_sec.png)
 
 **Komentarz:** W `packets_per_sec` ataki obvious są nadal wyraźnie przesunięte, ale medium i subtle coraz bardziej nakładają się na normalny ruch. To oznacza, że sama ta cecha nie gwarantuje już separacji i model musi korzystać z kombinacji cech. W praktyce właśnie ten efekt (nakładanie rozkładów) jest źródłem FN przy progu 0.5.
 
-![](images/images/z2_density_overlay_avg_packet_size_bytes.png)
+![](images/z2_density_overlay_avg_packet_size_bytes.png)
 
 **Komentarz:** Dla średniego rozmiaru pakietu różnica dla subtle jest niewielka, więc część próbek ataku będzie statystycznie „normalna”. To dobrze ilustruje problem detekcji subtelnych anomalii: klasy są różne, ale różnica jest mała w jednostkach σ. W takich warunkach strategie typu balanced albo τopt mają sens, bo przesuwają decyzję w stronę wykrywania rzadkich zdarzeń.
 
-![](images/images/z2_density_overlay_syn_ratio.png)
+![](images/z2_density_overlay_syn_ratio.png)
 
 **Komentarz:** `syn_ratio` nadal jest dobrym sygnałem dla obvious/medium, ale subtle mogą być blisko ruchu normalnego, więc sama cecha nie wystarczy. W praktyce model liniowy składa informację z kilku cech, a niektóre subtelne ataki wykrywa dopiero przy niższym progu τ. To wprost tłumaczy, dlaczego τopt wyszedł znacząco poniżej 0.5.
 
 #### 6) Precision / Recall / F1 w funkcji τ
-![](images/images/z2_metrics_vs_tau.png)
+![](images/z2_metrics_vs_tau.png)
 
 **Komentarz:** Wykres pokazuje klasyczny trade-off: obniżanie τ zwiększa Recall (mniej FN), ale obniża Precision (więcej FP). Dla bezpieczeństwa często preferuje się obszar, w którym Recall jest wysoki, bo przeoczony atak bywa dużo kosztowniejszy. Linia τopt=0.12 leży w regionie, gdzie Recall jest maksymalny, a Precision wciąż akceptowalne.
 
 #### 7) Koszt C(τ)=100·FN+1·FP i minimum w τopt
-![](images/images/z2_cost_vs_tau.png)
+![](images/z2_cost_vs_tau.png)
 
 **Komentarz:** Minimum kosztu wypada przy τopt=0.12, co jest spójne z bardzo wysoką karą za FN (100×). Program raportuje ΔC=98, czyli tyle „oszczędzamy” w koszcie w porównaniu do τ=0.5. Intuicyjnie: lepiej zaakceptować 1–2 FP niż przeoczyć 1 atak, bo to kosztuje wielokrotnie więcej.
 
@@ -525,11 +525,7 @@ Funkcja `split_60_20_20` robi:
 - 20% test
 ze **stratyfikacją** (czyli zachowaniem proporcji klas).
 
-Następnie kod liczy Z-score (`zscore_fit` na train) i aplikuje na train/test.
-Uwaga: dla drzew skalowanie nie jest konieczne, ale:
-- pomaga w baseline’ach typu LogReg i SVM,
-- utrzymuje spójny pipeline,
-- ułatwia porównania.
+
 
 ---
 
@@ -696,7 +692,7 @@ Poniżej omawiamy je w logicznej kolejności.
 ### 1) ROC — porównanie modeli
 
 #### CICIDS2017: ROC
-![](images/images/CICIDS__roc_all_models.png)
+![](images/CICIDS__roc_all_models.png)
 
 **Komentarz:**  
 Na CICIDS krzywe ROC dla modeli drzewiastych i XGBoost są praktycznie „idealne” (blisko lewego-górnego rogu),
@@ -705,7 +701,7 @@ To sugeruje, że problem nie leży tylko w doborze progu, ale w tym, że ranking
 (i/lub cechy nie są liniowo separowalne przy takim preprocessing’u).
 
 #### UNSW-NB15: ROC
-![](images/images/UNSW__roc_all_models.png)
+![](images/UNSW__roc_all_models.png)
 
 **Komentarz:**  
 W UNSW widzimy bardziej realistyczny obraz: RF i XGBoost wyraźnie dominują w AUC (≈0.983–0.984), co oznacza, że
@@ -717,7 +713,7 @@ co wskazuje, że zależności są bardziej nieliniowe, a model liniowy nie wykor
 ### 2) Precision–Recall (PR) — szczególnie ważne przy niezbalansowaniu
 
 #### CICIDS2017: PR
-![](images/images/CICIDS__pr_all_models.png)
+![](images/CICIDS__pr_all_models.png)
 
 **Komentarz:**  
 Krzywa PR jest często bardziej miarodajna niż ROC przy niezbalansowaniu klas.
@@ -725,7 +721,7 @@ W CICIDS modele drzewiaste utrzymują wysoką precyzję przy wysokim recall, co 
 Regresja logistyczna ma niską precyzję (co widać w tabeli: Precision≈0.381), czyli alarmuje zbyt często.
 
 #### UNSW-NB15: PR
-![](images/images/UNSW__pr_all_models.png)
+![](images/UNSW__pr_all_models.png)
 
 **Komentarz:**  
 W UNSW krzywe PR pokazują, że RF i XGBoost utrzymują lepszy kompromis (wysoka precyzja przy wysokim recall).
@@ -736,11 +732,11 @@ To ważne praktycznie: możemy dostroić próg, aby uzyskać np. Recall>0.93 i w
 ### 3) Macierze pomyłek — szczegółowa analiza FN/FP
 
 #### CICIDS2017: confusion matrices
-![](images/images/CICIDS__LogisticRegression_cm.png)
-![](images/images/CICIDS__DecisionTree_cm.png)
-![](images/images/CICIDS__RandomForest_cm.png)
-![](images/images/CICIDS__SVM_RBF_cm.png)
-![](images/images/CICIDS__XGBoost_cm.png)
+![](images/CICIDS__LogisticRegression_cm.png)
+![](images/CICIDS__DecisionTree_cm.png)
+![](images/CICIDS__RandomForest_cm.png)
+![](images/CICIDS__SVM_RBF_cm.png)
+![](images/CICIDS__XGBoost_cm.png)
 
 **Komentarz:**  
 W CICIDS różnice są ogromne: LogReg generuje bardzo dużo FP, co potwierdza niską precyzję.  
@@ -748,11 +744,11 @@ DecisionTree/RF/XGBoost mają niemal zerowe FP i FN — czyli nie tylko są „d
 SVM jest wyraźnie gorszy (FP i/lub FN są zauważalne), co przekłada się na gorszą accuracy.
 
 #### UNSW-NB15: confusion matrices
-![](images/images/UNSW__LogisticRegression_cm.png)
-![](images/images/UNSW__DecisionTree_cm.png)
-![](images/images/UNSW__RandomForest_cm.png)
-![](images/images/UNSW__SVM_RBF_cm.png)
-![](images/images/UNSW__XGBoost_cm.png)
+![](images/UNSW__LogisticRegression_cm.png)
+![](images/UNSW__DecisionTree_cm.png)
+![](images/UNSW__RandomForest_cm.png)
+![](images/UNSW__SVM_RBF_cm.png)
+![](images/UNSW__XGBoost_cm.png)
 
 **Komentarz:**  
 UNSW pokazuje typową sytuację: modele różnią się głównie balansem FP vs FN.
@@ -769,11 +765,11 @@ To są wykresy poglądowe: redukujemy dane do 2 wymiarów PCA i rysujemy granice
 To **nie jest** pełen obraz w 7D, ale pozwala zobaczyć, czy model zachowuje się „liniowo” czy „poszatkowanie”.
 
 #### CICIDS2017: PCA decision boundaries
-![](images/images/CICIDS__pca2_boundaries__LogisticRegression_decision_boundary_pca2.png)
-![](images/images/CICIDS__pca2_boundaries__DecisionTree_decision_boundary_pca2.png)
-![](images/images/CICIDS__pca2_boundaries__RandomForest_decision_boundary_pca2.png)
-![](images/images/CICIDS__pca2_boundaries__SVM_RBF_decision_boundary_pca2.png)
-![](images/images/CICIDS__pca2_boundaries__XGBoost_decision_boundary_pca2.png)
+![](images/CICIDS__pca2_boundaries__LogisticRegression_decision_boundary_pca2.png)
+![](images/CICIDS__pca2_boundaries__DecisionTree_decision_boundary_pca2.png)
+![](images/CICIDS__pca2_boundaries__RandomForest_decision_boundary_pca2.png)
+![](images/CICIDS__pca2_boundaries__SVM_RBF_decision_boundary_pca2.png)
+![](images/CICIDS__pca2_boundaries__XGBoost_decision_boundary_pca2.png)
 
 **Komentarz:**  
 LogReg tworzy w PCA prawie liniową granicę, co może być niewystarczające, gdy klasy są „poskręcane” w przestrzeni cech.
@@ -781,11 +777,11 @@ Drzewo i boosting tworzą bardziej złożone, lokalne regiony decyzji.
 RF zwykle wygładza „poszarpanie” pojedynczego drzewa przez uśrednianie, co przekłada się na stabilniejsze granice.
 
 #### UNSW-NB15: PCA decision boundaries
-![](images/images/UNSW__pca2_boundaries__LogisticRegression_decision_boundary_pca2.png)
-![](images/images/UNSW__pca2_boundaries__DecisionTree_decision_boundary_pca2.png)
-![](images/images/UNSW__pca2_boundaries__RandomForest_decision_boundary_pca2.png)
-![](images/images/UNSW__pca2_boundaries__SVM_RBF_decision_boundary_pca2.png)
-![](images/images/UNSW__pca2_boundaries__XGBoost_decision_boundary_pca2.png)
+![](images/UNSW__pca2_boundaries__LogisticRegression_decision_boundary_pca2.png)
+![](images/UNSW__pca2_boundaries__DecisionTree_decision_boundary_pca2.png)
+![](images/UNSW__pca2_boundaries__RandomForest_decision_boundary_pca2.png)
+![](images/UNSW__pca2_boundaries__SVM_RBF_decision_boundary_pca2.png)
+![](images/UNSW__pca2_boundaries__XGBoost_decision_boundary_pca2.png)
 
 **Komentarz:**  
 Na UNSW widać większe nakładanie klas, a granice nieliniowe są bardziej uzasadnione.
@@ -800,9 +796,9 @@ Te wykresy pokazują, które cechy różnią klasy i czy rozkłady się nakłada
 Poniżej przykładowe zestawy (w `images/` jest ich więcej; w raporcie omawiamy te najważniejsze).
 
 #### CICIDS — wybrane cechy (KDE)
-![](images/images/CICIDS__feature_distributions__kde_Flow_Packets_per_s.png)
-![](images/images/CICIDS__feature_distributions__kde_SYN_Flag_Count.png)
-![](images/images/CICIDS__feature_distributions__kde_Average_Packet_Size.png)
+![](images/CICIDS__feature_distributions__kde_Flow_Packets_per_s.png)
+![](images/CICIDS__feature_distributions__kde_SYN_Flag_Count.png)
+![](images/CICIDS__feature_distributions__kde_Average_Packet_Size.png)
 
 **Komentarz:**  
 Jeżeli KDE dla ataku jest przesunięte i ma małe nakładanie z normalnym ruchem, model ma łatwe zadanie.
@@ -810,9 +806,9 @@ DDoS i PortScan często generują ekstremalne wartości (np. dużo pakietów/s, 
 co tłumaczy „prawie perfekcyjne” metryki dla drzew i boosting.
 
 #### UNSW — wybrane cechy (KDE)
-![](images/images/UNSW__feature_distributions__kde_flow_duration.png)
-![](images/images/UNSW__feature_distributions__kde_sbytes.png)
-![](images/images/UNSW__feature_distributions__kde_sload.png)
+![](images/UNSW__feature_distributions__kde_flow_duration.png)
+![](images/UNSW__feature_distributions__kde_sbytes.png)
+![](images/UNSW__feature_distributions__kde_sload.png)
 
 **Komentarz:**  
 W UNSW rozkłady częściej się nakładają, dlatego wynik nie jest perfekcyjny.
