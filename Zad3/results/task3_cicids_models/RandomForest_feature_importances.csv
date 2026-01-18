@@ -1,0 +1,8 @@
+feature,importance
+Destination Port,0.23483180786295035
+Flow Packets/s,0.06673129746369079
+Average Packet Size,0.4260759958580476
+Flow Duration,0.040730940020439345
+SYN Flag Count,0.005074211922707491
+Total Fwd Packets,0.10928803520835245
+Total Backward Packets,0.11726771166381177

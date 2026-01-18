@@ -1,0 +1,8 @@
+feature,importance
+packets_per_sec,0.064958096
+avg_packet_size,0.064409785
+dur,0.01345352
+rate,0.029697321
+sttl,0.7502238
+total_fwd_pkts,0.040299673
+total_bwd_pkts,0.03695778
