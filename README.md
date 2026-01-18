@@ -696,7 +696,7 @@ Poniżej omawiamy je w logicznej kolejności.
 ### 1) ROC — porównanie modeli
 
 #### CICIDS2017: ROC
-![](images/CICIDS__roc_all_models.png)
+![](images/images/CICIDS__roc_all_models.png)
 
 **Komentarz:**  
 Na CICIDS krzywe ROC dla modeli drzewiastych i XGBoost są praktycznie „idealne” (blisko lewego-górnego rogu),
@@ -705,7 +705,7 @@ To sugeruje, że problem nie leży tylko w doborze progu, ale w tym, że ranking
 (i/lub cechy nie są liniowo separowalne przy takim preprocessing’u).
 
 #### UNSW-NB15: ROC
-![](images/UNSW__roc_all_models.png)
+![](images/images/UNSW__roc_all_models.png)
 
 **Komentarz:**  
 W UNSW widzimy bardziej realistyczny obraz: RF i XGBoost wyraźnie dominują w AUC (≈0.983–0.984), co oznacza, że
@@ -717,7 +717,7 @@ co wskazuje, że zależności są bardziej nieliniowe, a model liniowy nie wykor
 ### 2) Precision–Recall (PR) — szczególnie ważne przy niezbalansowaniu
 
 #### CICIDS2017: PR
-![](images/CICIDS__pr_all_models.png)
+![](images/images/CICIDS__pr_all_models.png)
 
 **Komentarz:**  
 Krzywa PR jest często bardziej miarodajna niż ROC przy niezbalansowaniu klas.
@@ -725,7 +725,7 @@ W CICIDS modele drzewiaste utrzymują wysoką precyzję przy wysokim recall, co 
 Regresja logistyczna ma niską precyzję (co widać w tabeli: Precision≈0.381), czyli alarmuje zbyt często.
 
 #### UNSW-NB15: PR
-![](images/UNSW__pr_all_models.png)
+![](images/images/UNSW__pr_all_models.png)
 
 **Komentarz:**  
 W UNSW krzywe PR pokazują, że RF i XGBoost utrzymują lepszy kompromis (wysoka precyzja przy wysokim recall).
@@ -736,11 +736,11 @@ To ważne praktycznie: możemy dostroić próg, aby uzyskać np. Recall>0.93 i w
 ### 3) Macierze pomyłek — szczegółowa analiza FN/FP
 
 #### CICIDS2017: confusion matrices
-![](images/CICIDS__LogisticRegression_cm.png)
-![](images/CICIDS__DecisionTree_cm.png)
-![](images/CICIDS__RandomForest_cm.png)
-![](images/CICIDS__SVM_RBF_cm.png)
-![](images/CICIDS__XGBoost_cm.png)
+![](images/images/CICIDS__LogisticRegression_cm.png)
+![](images/images/CICIDS__DecisionTree_cm.png)
+![](images/images/CICIDS__RandomForest_cm.png)
+![](images/images/CICIDS__SVM_RBF_cm.png)
+![](images/images/CICIDS__XGBoost_cm.png)
 
 **Komentarz:**  
 W CICIDS różnice są ogromne: LogReg generuje bardzo dużo FP, co potwierdza niską precyzję.  
@@ -748,11 +748,11 @@ DecisionTree/RF/XGBoost mają niemal zerowe FP i FN — czyli nie tylko są „d
 SVM jest wyraźnie gorszy (FP i/lub FN są zauważalne), co przekłada się na gorszą accuracy.
 
 #### UNSW-NB15: confusion matrices
-![](images/UNSW__LogisticRegression_cm.png)
-![](images/UNSW__DecisionTree_cm.png)
-![](images/UNSW__RandomForest_cm.png)
-![](images/UNSW__SVM_RBF_cm.png)
-![](images/UNSW__XGBoost_cm.png)
+![](images/images/UNSW__LogisticRegression_cm.png)
+![](images/images/UNSW__DecisionTree_cm.png)
+![](images/images/UNSW__RandomForest_cm.png)
+![](images/images/UNSW__SVM_RBF_cm.png)
+![](images/images/UNSW__XGBoost_cm.png)
 
 **Komentarz:**  
 UNSW pokazuje typową sytuację: modele różnią się głównie balansem FP vs FN.
@@ -769,11 +769,11 @@ To są wykresy poglądowe: redukujemy dane do 2 wymiarów PCA i rysujemy granice
 To **nie jest** pełen obraz w 7D, ale pozwala zobaczyć, czy model zachowuje się „liniowo” czy „poszatkowanie”.
 
 #### CICIDS2017: PCA decision boundaries
-![](images/CICIDS__pca2_boundaries__LogisticRegression_decision_boundary_pca2.png)
-![](images/CICIDS__pca2_boundaries__DecisionTree_decision_boundary_pca2.png)
-![](images/CICIDS__pca2_boundaries__RandomForest_decision_boundary_pca2.png)
-![](images/CICIDS__pca2_boundaries__SVM_RBF_decision_boundary_pca2.png)
-![](images/CICIDS__pca2_boundaries__XGBoost_decision_boundary_pca2.png)
+![](images/images/CICIDS__pca2_boundaries__LogisticRegression_decision_boundary_pca2.png)
+![](images/images/CICIDS__pca2_boundaries__DecisionTree_decision_boundary_pca2.png)
+![](images/images/CICIDS__pca2_boundaries__RandomForest_decision_boundary_pca2.png)
+![](images/images/CICIDS__pca2_boundaries__SVM_RBF_decision_boundary_pca2.png)
+![](images/images/CICIDS__pca2_boundaries__XGBoost_decision_boundary_pca2.png)
 
 **Komentarz:**  
 LogReg tworzy w PCA prawie liniową granicę, co może być niewystarczające, gdy klasy są „poskręcane” w przestrzeni cech.
@@ -781,11 +781,11 @@ Drzewo i boosting tworzą bardziej złożone, lokalne regiony decyzji.
 RF zwykle wygładza „poszarpanie” pojedynczego drzewa przez uśrednianie, co przekłada się na stabilniejsze granice.
 
 #### UNSW-NB15: PCA decision boundaries
-![](images/UNSW__pca2_boundaries__LogisticRegression_decision_boundary_pca2.png)
-![](images/UNSW__pca2_boundaries__DecisionTree_decision_boundary_pca2.png)
-![](images/UNSW__pca2_boundaries__RandomForest_decision_boundary_pca2.png)
-![](images/UNSW__pca2_boundaries__SVM_RBF_decision_boundary_pca2.png)
-![](images/UNSW__pca2_boundaries__XGBoost_decision_boundary_pca2.png)
+![](images/images/UNSW__pca2_boundaries__LogisticRegression_decision_boundary_pca2.png)
+![](images/images/UNSW__pca2_boundaries__DecisionTree_decision_boundary_pca2.png)
+![](images/images/UNSW__pca2_boundaries__RandomForest_decision_boundary_pca2.png)
+![](images/images/UNSW__pca2_boundaries__SVM_RBF_decision_boundary_pca2.png)
+![](images/images/UNSW__pca2_boundaries__XGBoost_decision_boundary_pca2.png)
 
 **Komentarz:**  
 Na UNSW widać większe nakładanie klas, a granice nieliniowe są bardziej uzasadnione.
@@ -800,9 +800,9 @@ Te wykresy pokazują, które cechy różnią klasy i czy rozkłady się nakłada
 Poniżej przykładowe zestawy (w `images/` jest ich więcej; w raporcie omawiamy te najważniejsze).
 
 #### CICIDS — wybrane cechy (KDE)
-![](images/CICIDS__feature_distributions__kde_Flow_Packets_per_s.png)
-![](images/CICIDS__feature_distributions__kde_SYN_Flag_Count.png)
-![](images/CICIDS__feature_distributions__kde_Average_Packet_Size.png)
+![](images/images/CICIDS__feature_distributions__kde_Flow_Packets_per_s.png)
+![](images/images/CICIDS__feature_distributions__kde_SYN_Flag_Count.png)
+![](images/images/CICIDS__feature_distributions__kde_Average_Packet_Size.png)
 
 **Komentarz:**  
 Jeżeli KDE dla ataku jest przesunięte i ma małe nakładanie z normalnym ruchem, model ma łatwe zadanie.
@@ -810,9 +810,9 @@ DDoS i PortScan często generują ekstremalne wartości (np. dużo pakietów/s, 
 co tłumaczy „prawie perfekcyjne” metryki dla drzew i boosting.
 
 #### UNSW — wybrane cechy (KDE)
-![](images/UNSW__feature_distributions__kde_flow_duration.png)
-![](images/UNSW__feature_distributions__kde_sbytes.png)
-![](images/UNSW__feature_distributions__kde_sload.png)
+![](images/images/UNSW__feature_distributions__kde_flow_duration.png)
+![](images/images/UNSW__feature_distributions__kde_sbytes.png)
+![](images/images/UNSW__feature_distributions__kde_sload.png)
 
 **Komentarz:**  
 W UNSW rozkłady częściej się nakładają, dlatego wynik nie jest perfekcyjny.
